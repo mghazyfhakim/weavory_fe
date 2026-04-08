@@ -25,9 +25,9 @@ export default function Hero() {
     return (
       <section
         id="hero"
-        className="bg-white px-6 pb-20 pt-32 md:px-10 md:pt-36"
+        className="relative overflow-hidden bg-white px-6 pb-20 pt-32 md:px-10 md:pt-36"
       >
-        <div className="mx-auto max-w-7xl animate-pulse rounded-3xl bg-slate-100 p-10 h-[520px]" />
+        <div className="relative z-10 mx-auto h-[520px] max-w-7xl animate-pulse rounded-3xl bg-slate-100 p-10" />
       </section>
     );
   }
@@ -35,9 +35,25 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="bg-white px-6 pb-20 pt-32 md:px-10 md:pt-36"
+      className="relative overflow-hidden bg-white px-6 pb-20 pt-32 md:px-10 md:pt-36"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-12 md:grid-cols-2">
+      {/* ornament kiri */}
+      <img
+        src="/ornament-left.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-6 z-0 w-[170px] opacity-80 md:w-[210px]"
+      />
+
+      {/* ornament kanan */}
+      <img
+        src="/ornament-right.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-6 z-0 w-[190px] opacity-80 md:w-[500px]"
+      />
+
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 md:grid-cols-2">
         <div className="max-w-xl">
           <p className="text-sm font-medium tracking-[0.2em] text-slate-500">
             WEAVORY STUDIO
@@ -47,7 +63,7 @@ export default function Hero() {
             {hero.title?.split(" ").map((word, index) => {
               if (index === 1) {
                 return (
-                  <span key={index} className="text-primary-blue">
+                  <span key={index} className="text-[#102F76]">
                     {word}{" "}
                   </span>
                 );
@@ -66,7 +82,7 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap gap-4">
             <a
               href="#portfolio"
-              className="group inline-flex items-center gap-3 rounded-full bg-[#102F76] px-6 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:bg-[#0c245a]"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#102F76] px-6 py-3 text-sm font-medium text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#0c245a]"
             >
               Lihat Portofolio
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
@@ -79,7 +95,7 @@ export default function Hero() {
 
             <a
               href="#contact"
-              className="inline-flex items-center rounded-full border border-[#102F76] px-6 py-3 text-sm font-medium text-[#102F76] transition hover:bg-[#102F76] hover:text-white"
+              className="inline-flex items-center rounded-full border border-[#102F76] px-6 py-3 text-sm font-medium text-[#102F76] transition duration-300 hover:bg-[#102F76] hover:text-white"
             >
               Hubungi Kami
             </a>
@@ -87,11 +103,13 @@ export default function Hero() {
         </div>
 
         <div className="flex justify-center md:justify-end">
-          <img
-            src={getImageUrl(hero.image_url)}
-            alt={hero.title}
-            className="h-[420px] w-full max-w-[380px] rounded-[28px] object-cover shadow-xl"
-          />
+          <div className="h-[420px] w-full max-w-[380px] overflow-hidden rounded-[28px] shadow-xl">
+            <img
+              src={getImageUrl(hero.image_url)}
+              alt={hero.title}
+              className="h-full w-full  object-cover object-center"
+            />
+          </div>
         </div>
       </div>
     </section>
