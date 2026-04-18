@@ -1,18 +1,27 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 const menus = [
-  { id: "hero", label: "Home" },
-  { id: "about", label: "Tentang Kami" },
-  { id: "services", label: "Layanan" },
-  { id: "portfolio", label: "Portofolio" },
-  { id: "contact", label: "Kontak" },
+  { id: "hero", label: "Home", href: "/#hero" },
+  { id: "about", label: "Tentang Kami", href: "/#about" },
+  { id: "services", label: "Layanan", href: "/#services" },
+  { id: "portfolio", label: "Portofolio", href: "/#portfolio" },
+  { id: "contact", label: "Kontak", href: "/contact" },
 ];
 
 export default function Navbar() {
-  const [active, setActive] = useState("hero");
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+
+  const [active, setActive] = useState(() => {
+    if (pathname === "/contact") return "contact";
+    return "hero";
+  });
+
   const [scrolled, setScrolled] = useState(false);
 
   const refs = {
@@ -24,8 +33,20 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    if (!isHomePage) {
+      if (pathname === "/contact") {
+        setActive("contact");
+      }
+
+      const onScroll = () => setScrolled(window.scrollY > 10);
+      onScroll();
+      window.addEventListener("scroll", onScroll);
+
+      return () => window.removeEventListener("scroll", onScroll);
+    }
+
     const handleScroll = () => {
-      const sections = ["hero", "about", "services", "portfolio", "contact"];
+      const sections = ["hero", "about", "services", "portfolio"];
 
       for (const id of sections) {
         const el = document.getElementById(id);
@@ -45,8 +66,9 @@ export default function Navbar() {
 
     handleScroll();
     window.addEventListener("scroll", handleScroll);
+
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHomePage, pathname]);
 
   const activeEl = refs[active as keyof typeof refs]?.current;
 
@@ -54,38 +76,43 @@ export default function Navbar() {
     <nav
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/85 shadow-sm backdrop-blur-md border-b border-slate-200"
-          : "bg-transparent"
+          ? "border-b border-slate-200 bg-white/90 shadow-sm backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
-        <a
-          href="#hero"
-          className="text-lg font-bold tracking-wide text-primary-blue"
+        <Link
+          href="/"
+          className="text-lg font-bold tracking-wide text-[#102F76]"
         >
           WEAVORY STUDIO
-        </a>
+        </Link>
 
         <div className="relative hidden items-center gap-8 md:flex">
-          {menus.map((menu) => (
-            <a
-              key={menu.id}
-              href={`#${menu.id}`}
-              ref={refs[menu.id as keyof typeof refs]}
-              className={`relative pb-2 text-sm font-medium transition-colors ${
-                active === menu.id
-                  ? "text-primary-blue"
-                  : "text-slate-600 hover:text-primary-green"
-              }`}
-            >
-              {menu.label}
-            </a>
-          ))}
+          {menus.map((menu) => {
+            const isActive = active === menu.id;
+
+            return (
+              <Link
+                key={menu.id}
+                href={menu.href}
+                ref={refs[menu.id as keyof typeof refs]}
+                className={`relative pb-2 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "text-[#102F76]"
+                    : "text-slate-600 hover:text-[#477D7B]"
+                }`}
+              >
+                {menu.label}
+              </Link>
+            );
+          })}
 
           {activeEl && (
             <motion.div
+              key="underline"
               layout
-              className="absolute bottom-0 h-[2px] rounded-full bg-primary-green"
+              className="absolute bottom-0 h-[2px] rounded-full bg-[#477D7B]"
               initial={false}
               animate={{
                 left: activeEl.offsetLeft,

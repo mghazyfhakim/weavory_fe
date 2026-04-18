@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { API_BASE_URL } from "@/lib/api";
+import { Mail, MessageCircle } from "lucide-react";
+import { FaInstagram } from "react-icons/fa6";
 
 type FormType = {
   name: string;
@@ -21,6 +23,7 @@ export default function Contact() {
     message: "",
   });
 
+  const [submittedData, setSubmittedData] = useState<FormType | null>(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [errors, setErrors] = useState<ErrorsType>({});
@@ -56,17 +59,22 @@ export default function Contact() {
     setLoading(true);
 
     try {
+      const payload = { ...form };
+
       const res = await fetch(`${API_BASE_URL}/api/inquiry`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
         throw new Error("Failed to submit inquiry");
       }
+
+      setSubmittedData(payload);
+      setShowModal(true);
 
       setForm({
         name: "",
@@ -74,8 +82,6 @@ export default function Contact() {
         contact: "",
         message: "",
       });
-
-      setShowModal(true);
     } catch (err) {
       console.error(err);
       alert("Terjadi kesalahan saat mengirim inquiry");
@@ -85,18 +91,18 @@ export default function Contact() {
   };
 
   const inputClassName =
-    "mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-primary-blue focus:ring-4 focus:ring-blue-100";
+    "mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#102F76] focus:ring-4 focus:ring-blue-100";
 
   return (
     <section id="contact" className="bg-white px-6 py-20 md:px-10">
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2 md:items-center">
         <div className="max-w-xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary-green">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#477D7B]">
             Kami Siap Membantu
           </p>
 
           <h2 className="mt-3 text-3xl font-bold leading-tight text-slate-900 md:text-4xl">
-            Diskusikan <span className="text-primary-blue">Kebutuhan</span>
+            Diskusikan <span className="text-[#102F76]">Kebutuhan</span>
             <br />
             Produksi Anda
           </h2>
@@ -107,23 +113,43 @@ export default function Contact() {
             prosesnya dengan standar kualitas yang konsisten.
           </p>
 
-          <div className="mt-8 space-y-5 text-sm">
-            <div>
-              <p className="font-semibold text-slate-900">Email</p>
-              <p className="mt-1 text-slate-600">weavorystudio@gmail.com</p>
+          <div className="mt-8 space-y-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50">
+                <Mail className="h-5 w-5 text-red-500" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-400">Email</p>
+                <p className="mt-1 text-sm font-medium text-slate-700">
+                  weavorystudio@gmail.com
+                </p>
+              </div>
             </div>
 
-            <div>
-              <p className="font-semibold text-slate-900">WhatsApp</p>
-              <p className="mt-1 text-slate-600">+62 856-2497-6680</p>
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50">
+                <MessageCircle className="h-5 w-5 text-green-500" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-400">WhatsApp</p>
+                <p className="mt-1 text-sm font-medium text-slate-700">
+                  +62 856-2497-6680
+                </p>
+              </div>
             </div>
 
-            <div>
-              <p className="font-semibold text-slate-900">Instagram</p>
-              <p className="mt-1 text-slate-600">@weavory.studio</p>
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-pink-50">
+                <FaInstagram className="h-5 w-5 text-pink-500" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-400">Instagram</p>
+                <p className="mt-1 text-sm font-medium text-slate-700">
+                  @weavory.studio
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
+          </div>        </div>
 
         <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-6 shadow-sm md:p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -186,8 +212,8 @@ export default function Contact() {
             <button
               disabled={loading}
               className={`w-full rounded-full px-6 py-3 text-sm font-medium text-white transition duration-300 ${loading
-                ? "cursor-not-allowed bg-slate-400"
-                : "bg-[#102F76] hover:-translate-y-0.5 hover:bg-[#0c245a]"
+                  ? "cursor-not-allowed bg-slate-400"
+                  : "bg-[#102F76] hover:-translate-y-0.5 hover:bg-[#0c245a]"
                 }`}
             >
               {loading ? "Mengirim..." : "Kirim Inquiry"}
@@ -202,7 +228,7 @@ export default function Contact() {
       </div>
 
       <AnimatePresence>
-        {showModal && (
+        {showModal && submittedData && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4"
             initial={{ opacity: 0 }}
@@ -210,23 +236,47 @@ export default function Contact() {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"
-              initial={{ scale: 0.9, opacity: 0, y: 24 }}
+              className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+              initial={{ scale: 0.95, opacity: 0, y: 24 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 24 }}
+              exit={{ scale: 0.95, opacity: 0, y: 24 }}
               transition={{ duration: 0.25 }}
             >
-              <h3 className="text-xl font-semibold text-primary-blue">
-                Berhasil!
+              <h3 className="text-xl font-semibold text-[#102F76]">
+                Inquiry Berhasil Dikirim
               </h3>
 
-              <p className="mt-3 text-sm leading-6 text-slate-600">
-                Inquiry Anda telah dikirim.
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Berikut data yang Anda kirimkan:
               </p>
+
+              <div className="mt-5 space-y-4 rounded-2xl bg-slate-50 p-4 text-sm">
+                <div>
+                  <p className="font-medium text-slate-900">Nama</p>
+                  <p className="mt-1 text-slate-600">{submittedData.name}</p>
+                </div>
+
+                <div>
+                  <p className="font-medium text-slate-900">Email</p>
+                  <p className="mt-1 text-slate-600">{submittedData.email}</p>
+                </div>
+
+                <div>
+                  <p className="font-medium text-slate-900">Kontak</p>
+                  <p className="mt-1 text-slate-600">{submittedData.contact}</p>
+                </div>
+
+                <div>
+                  <p className="font-medium text-slate-900">Pesan</p>
+                  <p className="mt-1 whitespace-pre-line text-slate-600">
+                    {submittedData.message}
+                  </p>
+                </div>
+              </div>
 
               <button
                 onClick={() => setShowModal(false)}
-                className="mt-5 rounded-full bg-[#102F76] px-5 py-2 text-sm font-medium text-white transition duration-300 hover:bg-[#0c245a]"
+                className="mt-5 w-full rounded-full bg-[#102F76] px-5 py-3 text-sm font-medium text-white transition duration-300 hover:bg-[#0c245a]"
               >
                 Tutup
               </button>
