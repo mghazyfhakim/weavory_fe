@@ -1,4 +1,15 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 export default function Footer() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  const navLink = (section: string) =>
+    isHome ? `#${section}` : `/#${section}`;
+
   return (
     <footer
       className="px-6 py-16 text-white md:px-10"
@@ -9,6 +20,8 @@ export default function Footer() {
     >
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-10 md:flex-row">
+          
+          {/* LEFT */}
           <div className="max-w-md">
             <div className="text-lg font-bold tracking-wide text-white">
               WEAVORY STUDIO
@@ -21,18 +34,34 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-wrap gap-6 text-sm text-white/80">
-            <a href="#about" className="transition hover:text-white">
+            
+            <Link
+              href="/about"
+              className="transition hover:text-white"
+            >
               Tentang Kami
-            </a>
-            <a href="#services" className="transition hover:text-white">
+            </Link>
+
+            <Link
+              href="/services"
+              className="transition hover:text-white"
+            >
               Layanan
-            </a>
-            <a href="#portfolio" className="transition hover:text-white">
+            </Link>
+
+            <Link
+              href="/portfolio"
+              className="transition hover:text-white"
+            >
               Portofolio
-            </a>
-            <a href="#contact" className="transition hover:text-white">
+            </Link>
+
+            <Link
+              href= "/contact"
+              className="transition hover:text-white"
+            >
               Kontak
-            </a>
+            </Link>
           </div>
         </div>
 

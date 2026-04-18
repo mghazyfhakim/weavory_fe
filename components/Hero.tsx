@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { API_BASE_URL, getImageUrl } from "@/lib/api";
+import Link from "next/link";
 
 type HeroType = {
   title: string;
@@ -13,12 +14,16 @@ type HeroType = {
 
 export default function Hero() {
   const [hero, setHero] = useState<HeroType | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/hero`)
       .then((res) => res.json())
-      .then((data) => setHero(data))
-      .catch((err) => console.error("Failed to fetch hero:", err));
+      .then((res) => setHero(res.data))
+      .catch(() => setError("Gagal mengambil data"))
+      .finally(() => setLoading(false));
   }, []);
 
   if (!hero) {
@@ -37,7 +42,7 @@ export default function Hero() {
       id="hero"
       className="relative overflow-hidden bg-white px-6 pb-20 pt-32 md:px-10 md:pt-36"
     >
-      {/* ornament kiri */}
+
       <img
         src="/ornament-left.png"
         alt=""
@@ -45,7 +50,6 @@ export default function Hero() {
         className="pointer-events-none absolute left-0 top-6 z-0 w-[170px] opacity-80 md:w-[210px]"
       />
 
-      {/* ornament kanan */}
       <img
         src="/ornament-right.png"
         alt=""
@@ -75,40 +79,46 @@ export default function Hero() {
             <span className="text-slate-900">{hero.subtitle}</span>
           </h1>
 
-          <p className="mt-6 text-base leading-7 text-slate-600 md:text-lg">
+          <p className="mt-6 text-base leading-7 text-slate-600 md:text-lg text-justify">
             {hero.description}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="#portfolio"
-              className="group inline-flex items-center gap-3 rounded-full bg-[#102F76] px-6 py-3 text-sm font-medium text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#0c245a]"
-            >
-              Lihat Portofolio
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
-                <ArrowRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </span>
-            </a>
+  <Link
+    href="/portfolio"
+    className="group inline-flex items-center gap-3 rounded-full bg-[#102F76] px-6 py-3 text-sm font-medium text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#0c245a]"
+  >
+    Lihat Portofolio
+    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
+      <ArrowRight
+        size={16}
+        className="transition-transform duration-300 group-hover:translate-x-1"
+      />
+    </span>
+  </Link>
 
-            <a
-              href="#contact"
-              className="inline-flex items-center rounded-full border border-[#102F76] px-6 py-3 text-sm font-medium text-[#102F76] transition duration-300 hover:bg-[#102F76] hover:text-white"
-            >
-              Hubungi Kami
-            </a>
-          </div>
+  <Link
+    href="/contact"
+    className="inline-flex items-center rounded-full border border-[#102F76] px-6 py-3 text-sm font-medium text-[#102F76] transition duration-300 hover:bg-[#102F76] hover:text-white"
+  >
+    Hubungi Kami
+  </Link>
+</div>
         </div>
 
         <div className="flex justify-center md:justify-end">
           <div className="h-[420px] w-full max-w-[380px] overflow-hidden rounded-[28px] shadow-xl">
-            <img
-              src={getImageUrl(hero.image_url)}
-              alt={hero.title}
-              className="h-full w-full  object-cover object-center"
-            />
+            {hero.image_url ? (
+              <img
+                src={getImageUrl(hero.image_url)}
+                alt={hero.title}
+                className="h-full w-full object-cover object-center"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
+                No Image
+              </div>
+            )}
           </div>
         </div>
       </div>

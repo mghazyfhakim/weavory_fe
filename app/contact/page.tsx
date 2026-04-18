@@ -113,7 +113,7 @@ export default function ContactPage() {
           <div className="max-w-xl">
             <h1 className="text-4xl font-bold text-slate-900">Hubungi Kami</h1>
 
-            <p className="mt-4 max-w-md text-sm leading-7 text-slate-600 md:text-base">
+            <p className="mt-4 max-w-md text-sm leading-7 text-slate-600 md:text-base text-justify">
               Ceritakan kebutuhan Anda. Kami membantu mewujudkan ide Anda
               menjadi pakaian dengan standar kualitas yang konsisten.
             </p>

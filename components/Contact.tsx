@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { API_BASE_URL } from "@/lib/api";
 import { Mail, MessageCircle } from "lucide-react";
@@ -88,6 +88,13 @@ export default function Contact() {
     } finally {
       setLoading(false);
     }
+
+    useEffect(() => {
+      if (showModal) {
+        const t = setTimeout(() => setShowModal(false), 4000);
+        return () => clearTimeout(t);
+      }
+    }, [showModal]);
   };
 
   const inputClassName =
@@ -107,7 +114,7 @@ export default function Contact() {
             Produksi Anda
           </h2>
 
-          <p className="mt-5 text-base leading-8 text-slate-600">
+          <p className="mt-5 text-base leading-8 text-slate-600 text-justify">
             Kami terbuka untuk diskusi kebutuhan jahit, produksi apparel,
             pembuatan pola, hingga sablon. Sampaikan ide Anda, kami bantu
             prosesnya dengan standar kualitas yang konsisten.
@@ -212,8 +219,8 @@ export default function Contact() {
             <button
               disabled={loading}
               className={`w-full rounded-full px-6 py-3 text-sm font-medium text-white transition duration-300 ${loading
-                  ? "cursor-not-allowed bg-slate-400"
-                  : "bg-[#102F76] hover:-translate-y-0.5 hover:bg-[#0c245a]"
+                ? "cursor-not-allowed bg-slate-400"
+                : "bg-[#102F76] hover:-translate-y-0.5 hover:bg-[#0c245a]"
                 }`}
             >
               {loading ? "Mengirim..." : "Kirim Inquiry"}

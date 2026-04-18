@@ -3,23 +3,28 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { API_BASE_URL, getImageUrl } from "@/lib/api";
+import Link from "next/link";
 
 type PortfolioType = {
   id: number;
   title: string;
   description: string;
+  material: string; 
   image_url?: string;
 };
 
 export default function Portfolio() {
   const [data, setData] = useState<PortfolioType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/portfolios`)
-      .then((res) => res.json())
-      .then((data) => setData(data))
-      .catch((err) => console.error("Failed to fetch portfolio:", err));
-  }, []);
+  fetch(`${API_BASE_URL}/api/portfolios?limit=3`)
+    .then((res) => res.json())
+    .then((res) => setData(res.data))
+    .catch(() => setError("Gagal mengambil data"))
+    .finally(() => setLoading(false));
+}, []);
 
   return (
     <section
@@ -50,8 +55,10 @@ export default function Portfolio() {
             >
               <div>
                 <h3 className="text-[20px] font-semibold leading-snug text-slate-900">
-                  {item.title}
+                  {item.title} - {item.material}
                 </h3>
+
+
 
                 <p className="mt-2 text-sm leading-6 text-slate-500">
                   {item.description}
@@ -65,13 +72,14 @@ export default function Portfolio() {
                     alt={item.title}
                     className="h-[185px] w-full object-cover"
                   />
-
+                  <Link href={`/portfolio/${item.id}`}>
                   <button
                     className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#6FA29C] text-white shadow-md transition hover:scale-105 hover:bg-[#5B8F89]"
                     aria-label={`Lihat detail ${item.title}`}
                   >
                     <ArrowUpRight size={16} />
                   </button>
+                  </Link>
                 </div>
               )}
             </article>
@@ -79,15 +87,15 @@ export default function Portfolio() {
         </div>
 
         <div className="mt-10 flex justify-center">
-          <a
-            href="#contact"
+          <Link
+            href="/portfolio"
             className="inline-flex items-center gap-2 rounded-full bg-[#5D908B] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#4C7B77]"
           >
             Lihat Lebih Banyak
             <span className="flex h-5 w-5 items-center justify-center rounded-full border border-white/20">
               <ArrowUpRight size={12} />
             </span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>
