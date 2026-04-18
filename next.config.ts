@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+// next.config.ts
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Remove the webpack section completely
+  turbopack: {}, // Add this to acknowledge Turbopack usage
 };
 
 export default nextConfig;
