@@ -7,9 +7,9 @@ import { motion } from "framer-motion";
 
 const menus = [
   { id: "hero", label: "Home", href: "/#hero" },
-  { id: "about", label: "Tentang Kami", href: "/#about" },
-  { id: "services", label: "Layanan", href: "/#services" },
-  { id: "portfolio", label: "Portofolio", href: "/#portfolio" },
+  { id: "about", label: "Tentang Kami", href: "/about" },
+  { id: "services", label: "Layanan", href: "/services" },
+  { id: "portfolio", label: "Portofolio", href: "/portfolio" },
   { id: "contact", label: "Kontak", href: "/contact" },
 ];
 
@@ -18,11 +18,15 @@ export default function Navbar() {
   const isHomePage = pathname === "/";
 
   const [active, setActive] = useState(() => {
-    if (pathname === "/contact") return "contact";
-    return "hero";
-  });
+  if (pathname === "/contact") return "contact";
+  if (pathname.startsWith ("/about")) return "about";
+  if (pathname.startsWith ("/services")) return "services";
+  if (pathname.startsWith("/portfolio")) return "portfolio";
+  return "hero";
+});
 
   const [scrolled, setScrolled] = useState(false);
+  const [navReady, setNavReady] = useState(false);
 
   const refs = {
     hero: useRef<HTMLAnchorElement | null>(null),
@@ -33,11 +37,25 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    if (!isHomePage) {
-      if (pathname === "/contact") {
-        setActive("contact");
-      }
+  if (pathname === "/contact") setActive("contact");
+  else if (pathname.startsWith ("/about")) setActive ("about");
+  else if (pathname.startsWith ("/services")) setActive ("services");
+  else if (pathname.startsWith("/portfolio")) setActive("portfolio");
+  else setActive("hero");
+}, [pathname]);
 
+  useEffect(() => {
+    setNavReady(false);
+
+    const frame = requestAnimationFrame(() => {
+      setNavReady(true);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [pathname, active]);
+
+  useEffect(() => {
+    if (!isHomePage) {
       const onScroll = () => setScrolled(window.scrollY > 10);
       onScroll();
       window.addEventListener("scroll", onScroll);
@@ -46,7 +64,7 @@ export default function Navbar() {
     }
 
     const handleScroll = () => {
-      const sections = ["hero", "about", "services", "portfolio"];
+      const sections = ["hero", "about", "services"];
 
       for (const id of sections) {
         const el = document.getElementById(id);
@@ -61,6 +79,36 @@ export default function Navbar() {
         }
       }
 
+      const portfolioSection = document.getElementById("portfolio");
+      if (portfolioSection) {
+        const top = portfolioSection.offsetTop - 120;
+        const bottom = top + portfolioSection.offsetHeight;
+
+        if (window.scrollY >= top && window.scrollY < bottom) {
+          setActive("portfolio");
+        }
+      }
+
+      const contactSection = document.getElementById("contact");
+      if (contactSection) {
+        const top = contactSection.offsetTop - 120;
+        const bottom = top + contactSection.offsetHeight;
+
+        if (window.scrollY >= top && window.scrollY < bottom) {
+          setActive("contact");
+        }
+      }
+
+      const aboutSection = document.getElementById("contact");
+      if (aboutSection) {
+        const top = aboutSection.offsetTop - 120;
+        const bottom = top + aboutSection.offsetHeight;
+
+        if (window.scrollY >= top && window.scrollY < bottom) {
+          setActive("contact");
+        }
+      }
+
       setScrolled(window.scrollY > 40);
     };
 
@@ -68,9 +116,11 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHomePage, pathname]);
+  }, [isHomePage]);
 
-  const activeEl = refs[active as keyof typeof refs]?.current;
+  const activeEl = navReady
+    ? refs[active as keyof typeof refs]?.current
+    : null;
 
   return (
     <nav

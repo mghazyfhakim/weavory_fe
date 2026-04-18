@@ -12,13 +12,16 @@ type ServiceType = {
 
 export default function Services() {
   const [services, setServices] = useState<ServiceType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/services`)
-      .then((res) => res.json())
-      .then((data) => setServices(data))
-      .catch((err) => console.error("Failed to fetch services:", err));
-  }, []);
+  fetch(`${API_BASE_URL}/api/services`)
+    .then((res) => res.json())
+    .then((res) => setServices(res.data))
+    .catch(() => setError("Gagal mengambil data"))
+    .finally(() => setLoading(false));
+}, []);
 
   return (
     <section id="services" className="bg-white px-6 py-20 md:px-10">
@@ -62,7 +65,7 @@ export default function Services() {
                   {s.title}
                 </h3>
 
-                <p className="mt-3 text-sm leading-7 text-slate-600">
+                <p className="mt-3 text-sm leading-7 text-slate-600 text-justify">
                   {s.description}
                 </p>
               </div>

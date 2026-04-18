@@ -11,12 +11,15 @@ type AboutType = {
 
 export default function About() {
   const [about, setAbout] = useState<AboutType | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/about`)
       .then((res) => res.json())
-      .then((data) => setAbout(data))
-      .catch((err) => console.error("Failed to fetch about:", err));
+      .then((res) => setAbout(res.data))
+      .catch(() => setError("Gagal mengambil data"))
+      .finally(() => setLoading(false));
   }, []);
 
   if (!about) {
@@ -53,7 +56,7 @@ export default function About() {
             })}
           </h2>
 
-          <p className="mt-6 max-w-xl text-base leading-8 text-slate-600">
+          <p className="mt-6 max-w-xl text-base leading-8 text-slate-600 text-justify">
             {about.description}
           </p>
         </div>
