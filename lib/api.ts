@@ -1,5 +1,5 @@
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://weavory-be.fly.dev";
+  process.env.NEXT_PUBLIC_API_URL || "//api.weavorystudio.com";
 
 export const getImageUrl = (path?: string) => {
   if (!path) return "";
