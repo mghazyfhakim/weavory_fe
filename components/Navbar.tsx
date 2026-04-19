@@ -16,6 +16,7 @@ const menus = [
 export default function Navbar() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
+  const [open, setOpen] = useState(false);
 
   const [active, setActive] = useState(() => {
   if (pathname === "/contact") return "contact";
@@ -137,6 +138,12 @@ export default function Navbar() {
         >
           WEAVORY STUDIO
         </Link>
+        <button
+          className="md:hidden text-slate-700"
+          onClick={() => setOpen(!open)}
+        >
+          ☰
+        </button>
 
         <div className="relative hidden items-center gap-8 md:flex">
           {menus.map((menu) => {
@@ -176,6 +183,29 @@ export default function Navbar() {
             />
           )}
         </div>
+        {/* Menu mobile */}
+{open && (
+  <div className="absolute top-full left-0 w-full md:hidden bg-white shadow-md border-t border-slate-200">
+    <div className="flex flex-col items-start gap-2 px-6 py-4">
+      {menus.map((menu) => (
+        <Link
+          key={menu.id}
+          href={menu.href}
+          className={`w-full rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+            active === menu.id
+              ? "bg-slate-100 text-[#102F76]"
+              : "text-slate-600 hover:bg-slate-50 hover:text-[#477D7B]"
+          }`}
+          onClick={() => setOpen(false)}
+        >
+          {menu.label}
+        </Link>
+      ))}
+    </div>
+  </div>
+)}
+
+      
       </div>
     </nav>
   );
