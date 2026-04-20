@@ -12,9 +12,14 @@ const inter = Inter({
   variable: "--font-body",
 });
 
-export const metadata: Metadata = {
-  title: "Weavory Studio",
-  description: "Premium Tailor & Fashion Studio",
+export const metadata = {
+  metadataBase: new URL("https://weavorystudio.com"),
+  title: {
+    default: "Weavory Studio",
+    template: "%s | Weavory Studio",
+  },
+  description:
+    "Weavory Studio menyediakan jasa jahit kebaya, kemeja, dan custom outfit premium.",
 };
 
 export default function RootLayout({
