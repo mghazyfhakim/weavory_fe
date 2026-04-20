@@ -1,28 +1,26 @@
-"use client"
+import Homeclient from "@/components/Homeclient";
 
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Services from "@/components/Services";
-import Portfolio from "@/components/Portfolio";
-import About from "@/components/About";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
-import Separator from "@/components/Separator";
+export async function generateMetadata() {
+  try {
+    const res = await fetch("https://api.weavorystudio.com/api/hero", {
+      cache: "no-store",
+    });
 
+    const data = await res.json();
 
-const fs = require('fs')
+    return {
+      title: data.title || "Weavory Studio",
+      description: data.subtitle || "Jasa jahit, sablon dan pembuatan pola kualitas premium",
+    };
+  } catch {
+    return {
+      title: "Weavory Studio",
+      description: "Jasa jahit, sablon dan pembuatan pola kualitas premium",
+      keywords: ["kebaya modern", "jahit kebaya", "tailor wanita", "jahit", "pembuatan pola", "sablon", "jahit baju", "custom apparel", "sablon baju"],
+    };
+  }
+}
 
-export default function Home() {
-  return (
-    <>
-      <Navbar />
-      <Hero />
-      <Services />
-      <Portfolio />
-      <About />
-      <Separator />
-      <Contact />
-      <Footer />
-    </>
-  );
+export default function Page() {
+  return <Homeclient />;
 }
