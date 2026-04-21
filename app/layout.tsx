@@ -18,6 +18,9 @@ export const metadata = {
     default: "Weavory Studio",
     template: "%s | Weavory Studio",
   },
+   icons: {
+    icon: "/favicon.ico",
+  },
   description:
     "Weavory Studio menyediakan jasa jahit kebaya, kemeja, dan custom outfit premium.",
 };
@@ -38,3 +41,4 @@ export default function RootLayout({
     </html>
   );
 }
+
