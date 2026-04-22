@@ -30,6 +30,7 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<ErrorsType>({});
   const [showModal, setShowModal] = useState(false);
+  
 
   const validate = () => {
     const newErrors: ErrorsType = {};
